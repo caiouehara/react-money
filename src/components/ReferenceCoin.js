@@ -1,5 +1,6 @@
 import React from 'react';
 import Coins from './Coins';
+import DateRate from './DateRate';
 class ReferenceCoin extends React.Component {
     constructor(props) {
         super(props);
@@ -10,6 +11,7 @@ class ReferenceCoin extends React.Component {
                 value: null,
                 URL_TO_FETCH: "https://api.exchangeratesapi.io/latest",
                 data: undefined,
+                dateRate: undefined,
             },
             Coins: {
                 BRL: 0,
@@ -21,8 +23,9 @@ class ReferenceCoin extends React.Component {
 
     componentDidMount() {
         this.getExchangeData();
+        console.log(this.state)
     }
-
+    
     setFirstReferenceCoin = () =>{
         if(this.state.referenceCoin.name === undefined){
             this.updateReferenceCoin("USD", this.state.referenceCoin.data.rates.USD);
@@ -35,9 +38,16 @@ class ReferenceCoin extends React.Component {
             .then((response) => response.json())
             .then(this.updateExchangeData)
             .then(this.setFirstReferenceCoin)
+            .then(this.updateDateRates)
             .catch(function (err) {
                 console.error('Failed retrieving information', err);
             });
+    }
+
+    updateDateRates = () =>{
+        let newState = this.state.referenceCoin;
+        newState.dateRate = this.state.referenceCoin.data.date;
+        this.setState(newState);
     }
 
     updateExchangeData = (data) =>{
@@ -92,6 +102,9 @@ class ReferenceCoin extends React.Component {
                 <p> EUR to {this.state.referenceCoin.name} {this.state.referenceCoin.value} </p>
                 <Coins
                     CoinsObject={this.state.Coins}
+                />
+                <DateRate
+                    dateRate={this.state.referenceCoin.dateRate}
                 />
             </div>
         );

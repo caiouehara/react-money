@@ -24,8 +24,10 @@ class ReferenceCoin extends React.Component {
     }
 
     setFirstReferenceCoin = () =>{
-        this.updateReferenceCoin("USD", this.state.referenceCoin.data.rates.USD);
-        this.updateCoins();
+        if(this.state.referenceCoin.name === undefined){
+            this.updateReferenceCoin("USD", this.state.referenceCoin.data.rates.USD);
+            this.updateCoins();
+        }
     }
 
     getExchangeData = () => {

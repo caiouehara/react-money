@@ -1,7 +1,7 @@
 import React from 'react';
 import Coins from './Coins';
 class ReferenceCoin extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.state = {
@@ -9,6 +9,7 @@ class ReferenceCoin extends React.Component {
                 name: undefined,
                 value: null,
                 URL_TO_FETCH: "https://api.exchangeratesapi.io/latest",
+                data: undefined,
             },
             Coins: {
                 BRL: 0,
@@ -18,48 +19,77 @@ class ReferenceCoin extends React.Component {
         }
     }
 
-    componentDidMount(){
-        this.getReferenceCoin();
+    componentDidMount() {
+        this.getExchangeData();
     }
 
-    getReferenceCoin = () => {
+    setFirstReferenceCoin = () =>{
+        this.updateReferenceCoin("USD", this.state.referenceCoin.data.rates.USD);
+        this.updateCoins();
+    }
+
+    getExchangeData = () => {
         fetch(this.state.referenceCoin.URL_TO_FETCH)
-        .then((response) => response.json())
-        .then(this.updateReferenceCoin)
-        .then(this.updateCoins)
-        .catch(function(err){
-            console.error('Failed retrieving information', err);
-        });
+            .then((response) => response.json())
+            .then(this.updateExchangeData)
+            .then(this.setFirstReferenceCoin)
+            .catch(function (err) {
+                console.error('Failed retrieving information', err);
+            });
     }
 
-    updateReferenceCoin = (data) => {
+    updateExchangeData = (data) =>{
         let newState = this.state.referenceCoin;
-        newState.name = "USD";
-        newState.value = data.rates.USD;
+        newState.data = data;
         this.setState(newState);
-        return data;
     }
 
-    updateCoins = (data) => {
-        let usdValue = this.state.referenceCoin.value;
+    updateReferenceCoin = (countryName, countryExchangeRates) => {
+        let newState = this.state.referenceCoin;
+        newState.name = countryName;
+        newState.value = countryExchangeRates;
+        this.setState(newState);
+    }
+
+    updateCoins = () => {
+        let referenceCoinValue = this.state.referenceCoin.value;
+        let data = this.state.referenceCoin.data;
         let newState = this.state.Coins;
 
-        console.log(data);
+        newState.BRL = Math.round((referenceCoinValue / data.rates.BRL) * 100) / 100;
+        newState.CAD = Math.round((referenceCoinValue / data.rates.CAD) * 100) / 100;
+        newState.CNY = Math.round((referenceCoinValue / data.rates.CNY) * 100) / 100;
 
-        newState.BRL = Math.round((usdValue/data.rates.BRL) * 100)/100;
-        newState.CAD = Math.round((usdValue/data.rates.CAD) * 100)/100;
-        newState.CNY = Math.round((usdValue/data.rates.CNY) * 100)/100;
-        
         this.setState(newState);
+    }
+
+    handleSelectBox = (event) => {
+        switch (event.target.value) {
+            case "USD":
+                this.updateReferenceCoin("USD", this.state.referenceCoin.data.rates.USD);
+                this.updateCoins();
+                break;
+            case "CAD":
+                this.updateReferenceCoin("CAD", this.state.referenceCoin.data.rates.CAD);
+                this.updateCoins();
+                break;
+            default:
+                console.log('error');
+                break;
+        }
     }
 
     render() {
         return (
             <div className="ReferenceCoin">
                 <p>Working</p>
-                <p>Reference: {this.state.referenceCoin.name} {this.state.referenceCoin.value} </p>
+                <select onChange={this.handleSelectBox}>
+                    <option value="USD" >USD</option>
+                    <option value="CAD" >CAD</option>
+                </select>
+                <p> EUR to {this.state.referenceCoin.name} {this.state.referenceCoin.value} </p>
                 <Coins
-                CoinsObject = {this.state.Coins}
+                    CoinsObject={this.state.Coins}
                 />
             </div>
         );

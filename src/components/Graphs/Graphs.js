@@ -8,6 +8,7 @@ class Graphs extends React.Component {
             victoryLine: {
                 graphsData: {
                     BRL: {
+                        isShowing: false,
                         data: [{ x: 0, y: 0 }],
                     }
                 },
@@ -46,10 +47,11 @@ class Graphs extends React.Component {
     render() {
         return (
             <div className="Graphs">
+                {this.state.victoryLine.graphsData.BRL.isShowing ? 
                 <DateRateGraph
                     victoryLine={this.state.victoryLine}
                     graphData={this.state.victoryLine.graphsData.BRL.data}
-                />
+                /> : ''}
                 <button onClick={this.updateGraphs}>Teste</button>
             </div>
         );

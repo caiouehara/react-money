@@ -102,6 +102,7 @@ class ReferenceCoin extends React.Component {
                 <p> EUR to {this.state.referenceCoin.name} {this.state.referenceCoin.value} </p>
                 <Coins
                     CoinsObject={this.state.Coins}
+                    dateRate={this.state.referenceCoin.dateRate}
                 />
                 <DateRate
                     dateRate={this.state.referenceCoin.dateRate}

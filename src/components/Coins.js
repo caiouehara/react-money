@@ -1,5 +1,5 @@
 import React from 'react';
-import Graphs from './Graphs';
+import Graphs from './Graphs/Graphs';
 
 class Coins extends React.Component {
   render() {
@@ -9,7 +9,10 @@ class Coins extends React.Component {
         <p>CAD {this.props.CoinsObject.CAD}</p>
         <p>CNY {this.props.CoinsObject.CNY}</p>
 
-        <Graphs></Graphs>
+        <Graphs
+          CoinsObject={this.props.CoinsObject}
+          dateRate={this.props.dateRate}
+        />
       </div>
     );
   }

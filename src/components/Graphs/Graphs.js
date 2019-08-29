@@ -7,10 +7,9 @@ class Graphs extends React.Component {
         this.state = {
             victoryLine: {
                 graphsData: {
-                    BRL: [
-                          { x: 1, y: 1 }, 
-                          { x: 2, y: 2 }  
-                         ],
+                    BRL: {
+                        data: [{ x: 0, y: 0 }],
+                    }
                 },
                 defaultStyle: {
                     parent: {
@@ -27,13 +26,31 @@ class Graphs extends React.Component {
         }
     }
 
+    updateGraphs = () => {
+        let newState = this.state.victoryLine.graphsData;
+        let Coins = this.props.CoinsObject;
+        let dateRate = parseInt(this.props.dateRate.slice(8));
+
+        for(var i in Coins){
+            if(newState[i]){
+                newState[i].data.push({ x: dateRate, y: Coins[i]})
+            }
+            else{
+                console.error(`graphData ${i} don't exist`);
+            }
+        }
+
+        this.setState(newState);
+    }
+
     render() {
         return (
             <div className="Graphs">
                 <DateRateGraph
                     victoryLine={this.state.victoryLine}
-                    graphData={this.state.victoryLine.graphsData.BRL}
+                    graphData={this.state.victoryLine.graphsData.BRL.data}
                 />
+                <button onClick={this.updateGraphs}>Teste</button>
             </div>
         );
     }

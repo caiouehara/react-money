@@ -1,6 +1,6 @@
 import React from 'react';
 import '../css/App.css';
-import ReferenceCoin from './ReferenceCoin';
+import ReferenceCoin from './EurExchange/ReferenceCoin';
 
 class App extends React.Component {
   render() {

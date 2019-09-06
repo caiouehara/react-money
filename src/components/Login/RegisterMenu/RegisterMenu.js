@@ -10,6 +10,7 @@ class RegisterMenu extends React.Component {
             validate: true,
             authConfig: {
                 emptyValidateUsername: false,
+                emptyValidatePassword: false,
             },
             userData: {
                 username: {
@@ -56,6 +57,16 @@ class RegisterMenu extends React.Component {
 
         this.setState(newState);
         return response;
+    }
+
+    emptyValidatePassword = () => {
+        let newState = this.state;
+
+        if (newState.userData.password.inputData.inputValue.length > 0) {
+            newState.authConfig.emptyValidatePassword = true;
+        }
+
+        this.setState(newState);
     }
 
     validateOperation = () => {

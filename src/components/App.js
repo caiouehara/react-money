@@ -1,5 +1,4 @@
 import React from 'react';
-import '../css/App.css';
 import Nav from './Nav/Nav';
 import EurExchange from './EurExchange/EurExchange';
 

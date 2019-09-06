@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EurExchange from './EurExchange/EurExchange';
 import Login from './Login/Login';
+import Home from './Home/Home';
 
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
           </div>
         </div>
         
-        <Route path="/" exact component={EurExchange}/>
+        <Route path="/" exact component={Home}/>
         <Route path="/eur-exchange" component={EurExchange}/>
         <Route path="/login" component={Login}/>
       </Router>

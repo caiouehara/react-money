@@ -1,6 +1,8 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
 import EurExchange from './EurExchange/EurExchange';
+import Login from './Login/Login';
+
 
 function App() {
   return (
@@ -10,13 +12,14 @@ function App() {
           <div className="nav-menu">
             <Link to="/"><button>Home</button></Link>
             <Link to="/eur-exchange"><button>Eur Exchange</button></Link>
+            <Link to="/login"><button>Login</button></Link>
           </div>
         </div>
         
-        <Route path="/" exact/>
+        <Route path="/" exact component={EurExchange}/>
         <Route path="/eur-exchange" component={EurExchange}/>
+        <Route path="/login" component={Login}/>
       </Router>
-      <p>Home</p>
     </div>
   );
 }

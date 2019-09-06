@@ -7,6 +7,11 @@ class LoginMenu extends React.Component {
         super(props);
 
         this.state = {
+            validate: true,
+            authConfig: {
+                checkUsername: false,
+                emptyValidateUsername: false,
+            },
             userData: {
                 username: {
                     inputData: {
@@ -38,22 +43,60 @@ class LoginMenu extends React.Component {
 
     handleSubmit = (event) => {
         axios.get('http://localhost:5000/users')
-        .then(this.checkUsername)
+            .then(this.emptyValidateUsername)
+            .then(this.checkUsername)
+            .then(this.validateOperation)
+            .then(this.reset)
     }
 
-    checkUsername = (response) =>{
+    emptyValidateUsername = (response) => {
+        let newState = this.state;
+
+        if (newState.userData.username.inputData.inputValue.length > 0) {
+            newState.authConfig.emptyValidateUsername = true;
+        }
+
+        this.setState(newState);
+        return response;
+    }
+
+    checkUsername = (response) => {
+        let newState = this.state.authConfig;
         let inputUsername = this.state.userData.username.inputData.inputValue;
-        let isAny = false;
 
         response.data.forEach(userData => {
-            if(userData.username === inputUsername){
-                isAny = true;
-            }
-            else{
-                isAny = false;
+            if (userData.username === inputUsername) {
+                newState.checkUsername = true;
             }
         });
-        return isAny;
+
+        this.setState(newState);
+    }
+
+    validateOperation = () => {
+        let newState = this.state;
+
+        for(var i in newState.authConfig){
+            if(!newState.authConfig[i]){
+                newState.validate = false;
+            }
+        }
+
+        this.setState(newState);
+        console.log(this.state.authConfig)
+        console.log('[AuthMe] Operation:', this.state.validate)
+        console.log("[AuthMe] Operation: End")
+    }
+
+    reset = () => {
+        let newState = this.state;
+
+        for(var i in newState.authConfig){
+            newState.authConfig[i] = false;
+        }
+        newState.validate = true;
+
+        this.setState(newState);
     }
 
     render() {

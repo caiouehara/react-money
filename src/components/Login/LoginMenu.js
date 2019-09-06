@@ -1,5 +1,6 @@
 import React from 'react';
 import Input from './Input';
+import axios from 'axios';
 
 class LoginMenu extends React.Component {
     constructor(props) {
@@ -36,6 +37,23 @@ class LoginMenu extends React.Component {
     }
 
     handleSubmit = (event) => {
+        axios.get('http://localhost:5000/users')
+        .then(this.checkUsername)
+    }
+
+    checkUsername = (response) =>{
+        let inputUsername = this.state.userData.username.inputData.inputValue;
+        let isAny = false;
+
+        response.data.forEach(userData => {
+            if(userData.username === inputUsername){
+                isAny = true;
+            }
+            else{
+                isAny = false;
+            }
+        });
+        return isAny;
     }
 
     render() {

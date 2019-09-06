@@ -1,5 +1,5 @@
 import React from 'react';
-import Input from './Input';
+import Input from '../Input';
 import axios from 'axios';
 
 class LoginMenu extends React.Component {
@@ -85,7 +85,6 @@ class LoginMenu extends React.Component {
         this.setState(newState);
         console.log(this.state.authConfig)
         console.log('[AuthMe] Operation:', this.state.validate)
-        console.log("[AuthMe] Operation: End")
     }
 
     reset = () => {
@@ -97,11 +96,13 @@ class LoginMenu extends React.Component {
         newState.validate = true;
 
         this.setState(newState);
+        console.log("[AuthMe] Reset")
     }
 
     render() {
         return (
             <div className="LoginMenu">
+                <h3>LoginMenu</h3>
                 <Input
                     nameChange={this.handleInputValue}
                     userData={this.state.userData.username}

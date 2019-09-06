@@ -74,10 +74,12 @@ class RegisterMenu extends React.Component {
 
     registerUser = () => {
         let newUsername = this.state.userData.username.inputData.inputValue;
+        let newPassword = this.state.userData.password.inputData.inputValue;
 
         if (this.state.validate) {
             axios.post('http://localhost:5000/users/add', {
                 username: newUsername,
+                password: newPassword,
             })
             .then(console.log('[AuthMe] Register: ' + newUsername))
             .catch(function(error){

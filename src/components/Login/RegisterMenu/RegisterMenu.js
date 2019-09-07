@@ -30,7 +30,16 @@ class RegisterMenu extends React.Component {
                         label: 'Senha :',
                         maxLength: 15,
                     },
-                }
+                },
+                email: {
+                    inputData: {
+                        inputValue: '',
+                        name: 'email',
+                        type: 'text',
+                        label: 'Email :',
+                        maxLength: 15,
+                    }
+                },
             }
         }
     }
@@ -43,6 +52,7 @@ class RegisterMenu extends React.Component {
 
     handleSubmit = (event) => {
         this.emptyValidateUsername()
+        this.emptyValidatePassword()
         this.validateOperation()
         this.registerUser()
         this.reset()
@@ -86,16 +96,18 @@ class RegisterMenu extends React.Component {
     registerUser = () => {
         let newUsername = this.state.userData.username.inputData.inputValue;
         let newPassword = this.state.userData.password.inputData.inputValue;
+        let newEmail = this.state.userData.email.inputData.inputValue;
 
         if (this.state.validate) {
             axios.post('http://localhost:5000/users/add', {
                 username: newUsername,
                 password: newPassword,
+                email: newEmail,
             })
-            .then(console.log('[AuthMe] Register: ' + newUsername))
-            .catch(function(error){
-                console.log('[AuthMe] Register MongoDB API Error:' + error)
-            })
+                .then(console.log('[AuthMe] Register: ' + newUsername))
+                .catch(function (error) {
+                    console.log('[AuthMe] Register MongoDB API ' + error)
+                })
         }
     }
 
@@ -121,6 +133,10 @@ class RegisterMenu extends React.Component {
                 <Input
                     nameChange={this.handleInputValue}
                     userData={this.state.userData.password}
+                />
+                <Input
+                    nameChange={this.handleInputValue}
+                    userData={this.state.userData.email}
                 />
                 <button onClick={this.handleSubmit}>Submit</button>
             </div>

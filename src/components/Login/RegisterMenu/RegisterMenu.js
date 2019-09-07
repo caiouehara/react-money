@@ -7,10 +7,13 @@ class RegisterMenu extends React.Component {
         super(props);
 
         this.state = {
-            validate: true,
+            isValid: true,
             authConfig: {
-                emptyValidateUsername: false,
-                emptyValidatePassword: false,
+                // isValidGetUsername: false,
+                isValidEmptyUsername: false,
+                isValidEmptyPassword: false,
+                isValidEmptyEmail: false,
+                isValidRegularExpEmail: false,
             },
             userData: {
                 username: {
@@ -38,7 +41,8 @@ class RegisterMenu extends React.Component {
                         type: 'text',
                         label: 'Email :',
                         maxLength: 15,
-                    }
+                    },
+                    regularExp: new RegExp(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/),
                 },
             }
         }
@@ -51,32 +55,66 @@ class RegisterMenu extends React.Component {
     }
 
     handleSubmit = (event) => {
-        this.emptyValidateUsername()
-        this.emptyValidatePassword()
+        // this.validateGetUsername()
+        this.validateEmptyUsername()
+        this.validateEmptyPassword()
+        this.validateEmptyEmail()
+        this.validateRegularExpEmail()
         this.validateOperation()
         this.registerUser()
         this.reset()
     }
 
-    emptyValidateUsername = (response) => {
+    validateGetUsername = () => {
+        let newState = this.state.authConfig;
+        let inputUsername = this.state.userData.username.inputData.inputValue;
+
+        axios.get('http://localhost:5000/users')
+        .then(function (res) {
+        res.data.forEach(userData => {
+            if (userData.username === inputUsername) {
+                newState.isValidGetUsername = true;
+            }
+        });
+    })
+        this.setState(newState);
+    }
+
+    validateEmptyUsername = () => {
         let newState = this.state;
 
         if (newState.userData.username.inputData.inputValue.length > 0) {
-            newState.authConfig.emptyValidateUsername = true;
+            newState.authConfig.isValidEmptyUsername = true;
         }
 
         this.setState(newState);
-        return response;
     }
 
-    emptyValidatePassword = () => {
+    validateEmptyPassword = () => {
         let newState = this.state;
 
         if (newState.userData.password.inputData.inputValue.length > 0) {
-            newState.authConfig.emptyValidatePassword = true;
+            newState.authConfig.isValidEmptyPassword = true;
         }
 
         this.setState(newState);
+    }
+
+    validateEmptyEmail = () => {
+        let newState = this.state;
+
+        if (newState.userData.email.inputData.inputValue.length > 0) {
+            newState.authConfig.isValidEmptyEmail = true;
+        }
+
+        this.setState(newState);
+    }
+
+    validateRegularExpEmail = () => {
+        let regExp = this.state.userData.email.inputData.inputValue;
+        let regExpTest = this.state.userData.email.regularExp.test(regExp);
+        let newState = this.state.authConfig;
+        regExpTest ? newState.isValidRegularExpEmail = true : newState.isValidRegularExpEmail = false
     }
 
     validateOperation = () => {
@@ -84,13 +122,13 @@ class RegisterMenu extends React.Component {
 
         for (var i in newState.authConfig) {
             if (!newState.authConfig[i]) {
-                newState.validate = false;
+                newState.isValid = false;
             }
         }
 
         this.setState(newState);
         console.log(this.state.authConfig)
-        console.log('[AuthMe] Operation:', this.state.validate)
+        console.log('[AuthMe] Operation:', this.state.isValid)
     }
 
     registerUser = () => {
@@ -117,7 +155,7 @@ class RegisterMenu extends React.Component {
         for (var i in newState.authConfig) {
             newState.authConfig[i] = false;
         }
-        newState.validate = true;
+        newState.isValid = true;
 
         this.setState(newState);
     }
